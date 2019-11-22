@@ -1,5 +1,5 @@
 package com.music.record.repository;
 
-public class MusicRecordRepository {
+public class DiscRepository {
 
 }

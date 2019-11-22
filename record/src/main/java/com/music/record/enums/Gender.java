@@ -1,5 +1,8 @@
 package com.music.record.enums;
 
-public class Gender {
-
+public enum Gender {
+	POP,
+	MPB,
+	CLASSIC,
+	ROCK
 }
