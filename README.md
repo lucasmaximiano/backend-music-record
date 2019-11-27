@@ -6,6 +6,7 @@
 - Você vai precisar do MYSQL
 - Você vai precisar do Maven
 - Você vai precisar abrir o seu navegador e acessar a url http://localhost:5000/swagger-ui.html
+- Você vai do token -> Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.3YsZbo579pkYPRW4jIvbMwINShJAvpyQ8Jg0Jy5H-sE
 
 
 ## Tecnologias implementadas:
