@@ -32,7 +32,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 public class SwaggerConfig extends WebMvcConfigurationSupport {
 
 	public static final String AUTHORIZATION_HEADER = "Authorization";
-	public static final String DEFAULT_INCLUDE_PATTERN = "/api.*";
+	public static final String DEFAULT_INCLUDE_PATTERN = "/.*";
 
 	@Value("${app.version}")
 	private String version;
@@ -52,7 +52,7 @@ public class SwaggerConfig extends WebMvcConfigurationSupport {
 	@Bean
 	public Docket parserApi() {
 		return new Docket(DocumentationType.SWAGGER_2).select()
-				.apis(RequestHandlerSelectors.basePackage("com.music.record.controllers")).paths(regex("/api.*"))
+				.apis(RequestHandlerSelectors.basePackage("com.music.record.controllers")).paths(regex("/.*"))
 				.build().apiInfo(metaData()).securityContexts(Lists.newArrayList(securityContext()))
 				.securitySchemes(Lists.newArrayList(apiKey()));
 	}

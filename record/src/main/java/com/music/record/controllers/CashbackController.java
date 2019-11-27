@@ -20,10 +20,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.music.record.business.DiscBusiness;
-import com.music.record.dtos.DiscDto;
-import com.music.record.mapper.DiscMapper;
-import com.music.record.model.Disc;
+import com.music.record.business.CashbackBusiness;
+import com.music.record.dtos.CashbackDto;
+import com.music.record.mapper.CashbackMapper;
+import com.music.record.model.Cashback;
 
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -31,72 +31,73 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping(value = "/disc")
+@RequestMapping(value = "/cashback")
 @Api(value = "API Music Records")
 @CrossOrigin(origins = "*")
-public class DiscController {
+public class CashbackController {
 
 	@Autowired
-	private DiscBusiness discBusiness;
-
+	private CashbackBusiness cashbackBusiness;
+	
 	@Autowired
-	private DiscMapper discMapper;
+	private CashbackMapper cashbackMapper;
 
 	@PostMapping
 	@ResponseBody
-	@ApiOperation(value = "Create Disc", response = Disc.class, produces = "application/json")
+	@ApiOperation(value = "Create Cashback", response = Cashback.class, produces = "application/json")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 201, message = "Created"), @ApiResponse(code = 400, message = "Bad Request"),
 			@ApiResponse(code = 409, message = "Conflict"), @ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
-	public ResponseEntity<Optional<Disc>> create(@RequestBody @Valid final DiscDto discRequest) {
+	public ResponseEntity<Optional<Cashback>> create(@RequestBody @Valid final CashbackDto cashbackResquet) {
 		return ResponseEntity.status(HttpStatus.CREATED)
-				.body(discBusiness.create(discMapper.serializeToModel(discRequest)));
+				.body(cashbackBusiness.create(cashbackMapper.serializeToModel(cashbackResquet)));
 	}
 
 	@GetMapping(params = { "page", "pageSize", "gender" })
 	@ResponseBody
-	@ApiOperation(value = "Get Filter", response = Disc.class, produces = "application/json")
+	@ApiOperation(value = "Get Filter", response = Cashback.class, produces = "application/json")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 400, message = "Bad Request"), @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
-	public ResponseEntity<Optional<List<Disc>>> read(@RequestParam("page") Integer page,
+	public ResponseEntity<Optional<List<Cashback>>> read(@RequestParam("page") Integer page,
 			@RequestParam("pageSize") Integer pageSize, @RequestParam("gender") String gender) {
-		return ResponseEntity.ok().body(discBusiness.read(page, pageSize, gender));
+		return ResponseEntity.ok().body(cashbackBusiness.read(page, pageSize, gender));
 	}
 
 	@GetMapping("/{id}")
 	@ResponseBody
-	@ApiOperation(value = "Get Disc By ID", response = Disc.class, produces = "application/json")
+	@ApiOperation(value = "Get Cashback By ID", response = Cashback.class, produces = "application/json")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 400, message = "Bad Request"), @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
-	public ResponseEntity<Optional<Disc>> findById(@PathVariable final Integer id) {
-		return ResponseEntity.status(HttpStatus.OK).body(discBusiness.findById(id));
+	public ResponseEntity<Optional<Cashback>> findById(@PathVariable final Integer id) {
+		return ResponseEntity.status(HttpStatus.OK).body(cashbackBusiness.findById(id));
 	}
 
 	@PutMapping
 	@ResponseBody
-	@ApiOperation(value = "Update Disc", response = Disc.class, produces = "application/json")
+	@ApiOperation(value = "Update Cashback", response = Cashback.class, produces = "application/json")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 400, message = "Bad Request"), @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
-	public ResponseEntity<Optional<Disc>> update(@RequestBody @Valid final DiscDto discRequest) {
-		return ResponseEntity.status(HttpStatus.OK).body(discBusiness.update(discMapper.serializeToModel(discRequest)));
+	public ResponseEntity<Optional<Cashback>> update(@RequestBody @Valid final CashbackDto cashbackResquet) {
+		return ResponseEntity.status(HttpStatus.OK)
+				.body(cashbackBusiness.update(cashbackMapper.serializeToModel(cashbackResquet)));
 	}
 
 	@DeleteMapping("/{id}")
 	@ResponseBody
-	@ApiOperation(value = "Delete Payment By ID", response = Disc.class, produces = "application/json")
+	@ApiOperation(value = "Delete Cashback By ID", response = Cashback.class, produces = "application/json")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 400, message = "Bad Request"), @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 404, message = "Not Found"),
 			@ApiResponse(code = 500, message = "Internal Server Error") })
 	public ResponseEntity<Void> delete(@PathVariable final Integer id) {
-		discBusiness.delete(id);
+		cashbackBusiness.delete(id);
 		return new ResponseEntity<Void>(HttpStatus.OK);
 	}
 }

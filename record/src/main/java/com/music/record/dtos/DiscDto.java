@@ -1,9 +1,13 @@
-package com.music.record.model;
+package com.music.record.dtos;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.persistence.*;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+
 import com.music.record.enums.Gender;
 
 import lombok.*;
@@ -14,26 +18,26 @@ import lombok.*;
 @AllArgsConstructor
 @ToString
 @Builder
-@Entity
-@EqualsAndHashCode
-@Table(name = "disc", schema = "music_record")
-public class Disc implements Serializable {
+public class DiscDto implements Serializable {
 
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Valid
 	private Integer id;
 
-	@Column
+	@Valid
+	@NotNull
 	private String name;
-
+	
+	@Valid
+	@NotNull
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
-
-	@Column
+	
+	@Valid
+	@NotNull
 	private BigDecimal price;
 }

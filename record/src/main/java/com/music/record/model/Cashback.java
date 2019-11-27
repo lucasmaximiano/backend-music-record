@@ -4,6 +4,8 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 
 import javax.persistence.*;
+
+import com.music.record.enums.Day;
 import com.music.record.enums.Gender;
 
 import lombok.*;
@@ -16,8 +18,8 @@ import lombok.*;
 @Builder
 @Entity
 @EqualsAndHashCode
-@Table(name = "disc", schema = "music_record")
-public class Disc implements Serializable {
+@Table(name = "cashback", schema = "music_record")
+public class Cashback implements Serializable{
 
 	/**
 	 * 
@@ -28,12 +30,12 @@ public class Disc implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 
-	@Column
-	private String name;
-
 	@Enumerated(EnumType.STRING)
 	private Gender gender;
 
+	@Enumerated(EnumType.STRING)
+	private Day day;
+
 	@Column
-	private BigDecimal price;
+	private BigDecimal percentCashBack;
 }
