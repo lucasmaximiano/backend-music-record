@@ -17,7 +17,6 @@ import com.music.record.enums.Gender;
 import com.music.record.model.Disc;
 import com.music.record.repository.DiscRepository;
 import com.music.record.service.SpotifyService;
-import com.ramon.pereira.albumstore.exception.SpotifyAuthenticateException;
 
 import lombok.NonNull;
 import lombok.var;

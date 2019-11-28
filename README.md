@@ -19,9 +19,10 @@
 - FlywayDb
 
 
+
 ## Arquitetura:
 
-- Toda arquitetura respeitando o principio único de responsibilidade (SOLID)
+- Toda arquitetura respeitando o principio único de responsibilidade.
 - Domain Driven Design
 
 

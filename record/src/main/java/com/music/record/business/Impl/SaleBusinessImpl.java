@@ -103,16 +103,9 @@ public class SaleBusinessImpl implements SaleBusiness {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sale Not Found"));
 
 		sale.getItens().forEach(e -> {
-			//Disc disc = getGenderById(e.getDiscId());
-			
-			//BigDecimal percentage = getPercentageByGender(disc.getGender().toString(), day);
-
-			// cashBackValue = calculateCashback(disc.getPrice(), percentage);
 
 			e.setCashBackValue(new BigDecimal(10.00));
 			e.setTotalPrice(e.getPrice().multiply(new BigDecimal(e.getQuantity())));
-			// cashBackTotalValue = cashBackTotalValue.add(item.getCashBackValue());
-			// totalPrice = totalPrice.add(item.getPrice());
 		});
 
 		sale.setTotalPrice(new BigDecimal(10.00));
