@@ -15,8 +15,6 @@ public interface SaleBusiness {
 	Optional<List<Sale>> read(@NonNull final Integer page, @NonNull final Integer pageSize,
 			@NonNull final Date startDate, @NonNull final Date endDate);
 
-	Optional<Sale> update(@NonNull final Sale Sale);
-
 	Optional<Sale> findById(@NonNull final Integer id);
 	
 	

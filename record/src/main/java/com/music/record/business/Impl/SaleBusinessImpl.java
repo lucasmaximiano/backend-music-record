@@ -48,34 +48,28 @@ public class SaleBusinessImpl implements SaleBusiness {
 
 	@Override
 	public Optional<Sale> create(@NonNull Sale sale) {
-		BigDecimal a = new BigDecimal("100.05");
-		//BigDecimal cashBackValue;
-		//BigDecimal totalPrice;
 
 		String day = ZonedDateTime.now().getDayOfWeek().toString();
+		BigDecimal totalPrice = new BigDecimal(0);
+		BigDecimal cashBackTotalValue = new BigDecimal(0);
+		
+		for(final var e : sale.getItens())
+		{
+			Disc disc = getGenderById(e.getDiscId());
 
-		sale.getItens().forEach(e -> {
+			BigDecimal percentage = getPercentageByGender(disc.getGender().toString(), day);
 
-			//Disc disc = getGenderById(e.getDiscId());
-
-			//BigDecimal percentage = getPercentageByGender(disc.getGender().toString(), day);
-
-			// cashBackValue = calculateCashback(disc.getPrice(), percentage);
-			
 			e.setTotalPrice(e.getPrice().multiply(new BigDecimal(e.getQuantity())));
-			e.setCashBackValue(a);
-			// cashBackValue = calculateCashback(e.setTotalPrice(), percentage);
+			e.setCashBackValue(calculateCashback(e.getTotalPrice(), percentage));
 			
 			e.setSale(sale);
 			
-			// cashBackTotalValue = cashBackTotalValue.add(item.getCashBackValue());
-
-			// totalPrice = totalPrice.add(item.getPrice());
-
-		});
-
-		sale.setTotalPrice(a);
-		sale.setCashBackTotalValue(a);
+			totalPrice = totalPrice.add(e.getCashBackValue());
+			cashBackTotalValue = cashBackTotalValue.add(e.getCashBackValue());
+		}
+		
+		sale.setTotalPrice(totalPrice);
+		sale.setCashBackTotalValue(cashBackTotalValue);
 		sale.setCreatedDate(new Date());
 
 		saleRepository.saveAndFlush(sale);
@@ -92,29 +86,6 @@ public class SaleBusinessImpl implements SaleBusiness {
 		return saleRepository.findByCreatedDateBetweenOrderByCreatedDateDesc(startDate, endDate, pageable);
 	}
 
-	@Override
-	public Optional<Sale> update(@NonNull Sale sale) {
-
-		//BigDecimal cashBackValue;
-		//BigDecimal totalPrice;
-		String day = ZonedDateTime.now().getDayOfWeek().toString();
-
-		saleRepository.findById(sale.getId())
-				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sale Not Found"));
-
-		sale.getItens().forEach(e -> {
-
-			e.setCashBackValue(new BigDecimal(10.00));
-			e.setTotalPrice(e.getPrice().multiply(new BigDecimal(e.getQuantity())));
-		});
-
-		sale.setTotalPrice(new BigDecimal(10.00));
-		sale.setCashBackTotalValue(new BigDecimal(10.00));
-
-		saleRepository.saveAndFlush(sale);
-
-		return Optional.of(sale);
-	}
 
 	@Override
 	public Optional<Sale> findById(@NonNull Integer id) {
@@ -129,8 +100,8 @@ public class SaleBusinessImpl implements SaleBusiness {
 
 	private BigDecimal getPercentageByGender(@NonNull final String gender, @NonNull final String day) {
 
-		Gender genderEnum = Gender.valueOf(gender);
-		Day dayEnum = Day.valueOf(day);
+		Gender genderEnum = Gender.valueOf(gender.toUpperCase());
+		Day dayEnum = Day.valueOf(day.toUpperCase());
 
 		final var chackback = cashbackRepository.findByGenderAndDay(genderEnum, dayEnum);
 		return chackback.get().getPercentCashBack();

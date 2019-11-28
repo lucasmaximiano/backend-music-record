@@ -41,7 +41,7 @@ public class DiscBusinessImpl implements DiscBusiness {
 	public Optional<List<Disc>> read(@NonNull Integer page, @NonNull Integer pageSize, @NonNull String gender) {
 		Pageable pageable = PageRequest.of(page, pageSize);
 
-		Gender genderEnum = Gender.valueOf(gender);
+		Gender genderEnum = Gender.valueOf(gender.toUpperCase());
 
 		return discRepository.findByGender(genderEnum, pageable);
 	}

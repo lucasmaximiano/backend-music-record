@@ -7,6 +7,8 @@ import java.util.List;
 
 import javax.persistence.*;
 
+import org.codehaus.jackson.annotate.JsonManagedReference;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import lombok.*;
@@ -42,7 +44,8 @@ public class Sale implements Serializable {
 	@Column
 	private BigDecimal cashBackTotalValue;
 
-	@OneToMany(cascade = CascadeType.PERSIST, mappedBy = "sale")
+    @OneToMany(cascade = CascadeType.PERSIST, mappedBy = "sale", fetch = FetchType.EAGER)
+    @JsonManagedReference
 	private List<SaleItem> itens;
 	
 	@Column

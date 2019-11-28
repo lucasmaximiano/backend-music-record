@@ -36,7 +36,7 @@ public class CashbackBusinessImpl implements CashbackBusiness {
 		
 		Pageable pageable = PageRequest.of(page, pageSize);
 		
-		Gender genderEnum = Gender.valueOf(gender);
+		Gender genderEnum = Gender.valueOf(gender.toUpperCase());
 		
 		return cashbackRepository.findByGender(genderEnum, pageable);
 	}
