@@ -19,4 +19,6 @@ public interface DiscBusiness {
 	void delete(@NonNull final Integer id);
 
 	Optional<Disc> findById(@NonNull final Integer id);
+	
+	void createAllSpotifyDiscs();
 }

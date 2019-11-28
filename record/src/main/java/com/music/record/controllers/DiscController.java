@@ -42,6 +42,18 @@ public class DiscController {
 	@Autowired
 	private DiscMapper discMapper;
 
+	@PostMapping("/spotify")
+	@ResponseBody
+	@ApiOperation(value = "Create All Spotify Discs")
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
+			@ApiResponse(code = 201, message = "Created"), @ApiResponse(code = 400, message = "Bad Request"),
+			@ApiResponse(code = 409, message = "Conflict"), @ApiResponse(code = 404, message = "Not Found"),
+			@ApiResponse(code = 500, message = "Internal Server Error") })
+	public ResponseEntity<Void> create() {
+		discBusiness.createAllSpotifyDiscs();
+		return new ResponseEntity<Void>(HttpStatus.CREATED);
+	}
+
 	@PostMapping
 	@ResponseBody
 	@ApiOperation(value = "Create Disc", response = Disc.class, produces = "application/json")
@@ -90,7 +102,7 @@ public class DiscController {
 
 	@DeleteMapping("/{id}")
 	@ResponseBody
-	@ApiOperation(value = "Delete Payment By ID", response = Disc.class, produces = "application/json")
+	@ApiOperation(value = "Delete Payment By ID")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 400, message = "Bad Request"), @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 404, message = "Not Found"),

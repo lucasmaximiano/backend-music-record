@@ -9,6 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 import javax.el.PropertyNotFoundException;
+import javax.persistence.Convert;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cglib.core.Local;
@@ -26,7 +27,6 @@ import com.music.record.model.Sale;
 import com.music.record.model.SaleItem;
 import com.music.record.repository.CashbackRepository;
 import com.music.record.repository.DiscRepository;
-import com.music.record.repository.SaleItemRepository;
 import com.music.record.repository.SaleRepository;
 
 import lombok.NonNull;
@@ -41,9 +41,6 @@ public class SaleBusinessImpl implements SaleBusiness {
 	private SaleRepository saleRepository;
 
 	@Autowired
-	private SaleItemRepository saleItemRepository;
-
-	@Autowired
 	private DiscRepository discRepository;
 
 	@Autowired
@@ -51,48 +48,79 @@ public class SaleBusinessImpl implements SaleBusiness {
 
 	@Override
 	public Optional<Sale> create(@NonNull Sale sale) {
+		BigDecimal a = new BigDecimal("100.05");
+		//BigDecimal cashBackValue;
+		//BigDecimal totalPrice;
 
-		final var calculatedSave = getCalculatedSale(sale);
+		String day = ZonedDateTime.now().getDayOfWeek().toString();
 
-		calculatedSave.setCreatedDate(new Date());
-		saleRepository.save(calculatedSave);
+		sale.getItens().forEach(e -> {
 
-		if (calculatedSave.getItens() != null) {
-			for (SaleItem item : calculatedSave.getItens()) {
-				saleItemRepository.save(item);
-			}
-		}
+			//Disc disc = getGenderById(e.getDiscId());
 
-		return Optional.of(calculatedSave);
+			//BigDecimal percentage = getPercentageByGender(disc.getGender().toString(), day);
+
+			// cashBackValue = calculateCashback(disc.getPrice(), percentage);
+			
+			e.setTotalPrice(e.getPrice().multiply(new BigDecimal(e.getQuantity())));
+			e.setCashBackValue(a);
+			// cashBackValue = calculateCashback(e.setTotalPrice(), percentage);
+			
+			e.setSale(sale);
+			
+			// cashBackTotalValue = cashBackTotalValue.add(item.getCashBackValue());
+
+			// totalPrice = totalPrice.add(item.getPrice());
+
+		});
+
+		sale.setTotalPrice(a);
+		sale.setCashBackTotalValue(a);
+		sale.setCreatedDate(new Date());
+
+		saleRepository.saveAndFlush(sale);
+
+		return Optional.of(sale);
 	}
 
 	@Override
 	public Optional<List<Sale>> read(@NonNull final Integer page, @NonNull final Integer pageSize,
 			@NonNull final Date startDate, @NonNull final Date endDate) {
-		
+
 		Pageable pageable = PageRequest.of(page, pageSize);
-		
+
 		return saleRepository.findByCreatedDateBetweenOrderByCreatedDateDesc(startDate, endDate, pageable);
 	}
 
 	@Override
 	public Optional<Sale> update(@NonNull Sale sale) {
 
+		//BigDecimal cashBackValue;
+		//BigDecimal totalPrice;
+		String day = ZonedDateTime.now().getDayOfWeek().toString();
+
 		saleRepository.findById(sale.getId())
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sale Not Found"));
 
-		final var calculatedSave = getCalculatedSale(sale);
+		sale.getItens().forEach(e -> {
+			//Disc disc = getGenderById(e.getDiscId());
+			
+			//BigDecimal percentage = getPercentageByGender(disc.getGender().toString(), day);
 
-		saleRepository.save(calculatedSave);
+			// cashBackValue = calculateCashback(disc.getPrice(), percentage);
 
-		if (calculatedSave.getItens() != null) {
-			for (SaleItem item : calculatedSave.getItens()) {
+			e.setCashBackValue(new BigDecimal(10.00));
+			e.setTotalPrice(e.getPrice().multiply(new BigDecimal(e.getQuantity())));
+			// cashBackTotalValue = cashBackTotalValue.add(item.getCashBackValue());
+			// totalPrice = totalPrice.add(item.getPrice());
+		});
 
-				saleItemRepository.save(item);
-			}
-		}
+		sale.setTotalPrice(new BigDecimal(10.00));
+		sale.setCashBackTotalValue(new BigDecimal(10.00));
 
-		return Optional.of(calculatedSave);
+		saleRepository.saveAndFlush(sale);
+
+		return Optional.of(sale);
 	}
 
 	@Override
@@ -101,47 +129,21 @@ public class SaleBusinessImpl implements SaleBusiness {
 				.orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Sale Not Found")));
 	}
 
-	private Sale getCalculatedSale(@NonNull Sale sale) {
-
-		String day = ZonedDateTime.now().getDayOfWeek().toString();
-		
-		BigDecimal cashBackTotalValue = new BigDecimal(0);
-		BigDecimal totalPrice= new BigDecimal(0);
-
-		if (sale.getItens() != null) {
-			for (SaleItem item : sale.getItens()) {
-
-				Disc disc = getGenderById(item.getDiscId());
-
-				BigDecimal percentage = getPercentageByGender(disc.getGender().toString(), day);
-
-				item.setCashBackValue(calculateCashback(disc.getPrice(), percentage));
-
-				cashBackTotalValue = cashBackTotalValue.add(item.getCashBackValue());
-				
-				totalPrice = totalPrice.add(item.getPrice());
-			}
-			sale.setCashBackTotalValue(cashBackTotalValue);
-			sale.setTotalPrice(totalPrice);
-		}
-		return sale;
-	}
-
-	private Disc getGenderById(Integer id) {
+	private Disc getGenderById(@NonNull final Integer id) {
 		final var disc = discRepository.findById(id);
 		return disc.get();
 	}
 
-	private BigDecimal getPercentageByGender(String gender, String day) {
-		
+	private BigDecimal getPercentageByGender(@NonNull final String gender, @NonNull final String day) {
+
 		Gender genderEnum = Gender.valueOf(gender);
 		Day dayEnum = Day.valueOf(day);
-		
+
 		final var chackback = cashbackRepository.findByGenderAndDay(genderEnum, dayEnum);
 		return chackback.get().getPercentCashBack();
 	}
 
-	private BigDecimal calculateCashback(BigDecimal discValor, BigDecimal percentage) {
-		return (percentage.multiply(discValor)).divide(new BigDecimal(100));
+	private BigDecimal calculateCashback(@NonNull final BigDecimal totalPrice, @NonNull final BigDecimal percentage) {
+		return totalPrice.divide(new BigDecimal(100)).multiply(percentage);
 	}
 }

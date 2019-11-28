@@ -18,4 +18,6 @@ public interface SaleBusiness {
 	Optional<Sale> update(@NonNull final Sale Sale);
 
 	Optional<Sale> findById(@NonNull final Integer id);
+	
+	
 }

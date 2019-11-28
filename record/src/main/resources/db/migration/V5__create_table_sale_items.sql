@@ -4,9 +4,9 @@ CREATE TABLE music_record.sale_item (
   disc_id INT NOT NULL,
   name VARCHAR(255) NOT NULL,
   quantity INT(11) NOT NULL,
-  price DECIMAL NOT NULL,
-  total_price DECIMAL NOT NULL,
-  cash_back_value DECIMAL NOT NULL,
+  price DECIMAL(10,2) NOT NULL,
+  total_price DECIMAL(10,2) NOT NULL,
+  cash_back_value DECIMAL(10,2) NOT NULL,
   CONSTRAINT FK_SALE_ITEM_SALE FOREIGN KEY (sale_id) REFERENCES sale (id),
   CONSTRAINT FK_SALE_ITEM_DISC FOREIGN KEY (disc_id) REFERENCES disc (id)
 );

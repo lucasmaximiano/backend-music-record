@@ -91,7 +91,7 @@ public class CashbackController {
 
 	@DeleteMapping("/{id}")
 	@ResponseBody
-	@ApiOperation(value = "Delete Cashback By ID", response = Cashback.class, produces = "application/json")
+	@ApiOperation(value = "Delete Cashback By ID")
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Success"),
 			@ApiResponse(code = 400, message = "Bad Request"), @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 404, message = "Not Found"),
